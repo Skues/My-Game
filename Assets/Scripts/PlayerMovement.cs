@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
-    private float crouchHeight = 0.9f; // How much the camera should move down when crouching
     private Transform player; // The player's transform
  
     Vector3 velocity;
@@ -35,7 +34,6 @@ public class PlayerMovement : MonoBehaviour
     {
         //checking if we hit the ground to reset our falling velocity, otherwise we will fall faster the next time
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
- 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -57,33 +55,7 @@ public class PlayerMovement : MonoBehaviour
             
         }
 
-         // Toggle crouch/stand on key press (C)
-        if (Input.GetKeyDown(KeyCode.C) && isGrounded)
-        {
-            if (isCrouching)
-            {
-                // Stand up (move camera back up)
-                targetPosition = new Vector3(cameraPosition.x, cameraPosition.y + crouchHeight, cameraPosition.z);
-                speed = 12f;
-                isCrouching = false;
-            }
-            else
-            {
-                // Start crouching (move camera down)
-                targetPosition = new Vector3(cameraPosition.x, cameraPosition.y - crouchHeight, cameraPosition.z);
-                speed = 5f;
-                isCrouching = true;
-            }
-        }
-
-        // Smoothly transition the camera to the target position
-        cameraPosition = Vector3.Lerp(cameraPosition, targetPosition, smoothSpeed);
-
-        // Apply the camera position update to the camera
-        mainCamera.transform.position = new Vector3(player.position.x, player.position.y + (cameraPosition.y - transform.position.y), player.position.z);
-
         velocity.y += gravity * Time.deltaTime;
- 
         controller.Move(velocity * Time.deltaTime);
     }
 }
