@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 132636738}
   - component: {fileID: 132636737}
   - component: {fileID: 132636736}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -614,7 +614,7 @@ GameObject:
   - component: {fileID: 847206308}
   - component: {fileID: 847206310}
   - component: {fileID: 847206309}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -903,6 +903,7 @@ GameObject:
   - component: {fileID: 1399242189}
   - component: {fileID: 1399242194}
   - component: {fileID: 1399242193}
+  - component: {fileID: 1399242195}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1041,6 +1042,25 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1399242195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399242188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0137ca169ca9448b97124a24b2a1f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1648819247}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 128
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &1413213819
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1213,7 @@ GameObject:
   - component: {fileID: 1648819251}
   - component: {fileID: 1648819250}
   - component: {fileID: 1648819252}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
