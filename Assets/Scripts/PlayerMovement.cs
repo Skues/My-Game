@@ -7,8 +7,12 @@ public class PlayerMovement : MonoBehaviour
     Camera mainCamera;
     Vector3 cameraPosition;
     public CharacterController controller;
+    private CrouchController crouchController;
     public float smoothSpeed = 0.5f;
-    public float speed = 12f;
+    public float baseSpeed = 9f;
+    public float currentSpeed;
+    public float sprint = 5f;
+    public float crouchSpeed = 5f;
     public float gravity = -9.81f * 2;
     public float jumpHeight = 3f;
  
@@ -22,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
     void Start()
     {
+        crouchController = GetComponent<CrouchController>();
         mainCamera = Camera.main;   
         player = transform;
         cameraPosition = mainCamera.transform.position;
@@ -32,6 +37,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool isCrouching = crouchController.IsCrouching();
+        if (Input.GetKey(KeyCode.LeftShift) && !isCrouching){
+            currentSpeed = baseSpeed + sprint;
+        }
+        else if(isCrouching){
+            currentSpeed = crouchSpeed;
+        }
+        else
+        {
+            currentSpeed = baseSpeed;
+        }
         //checking if we hit the ground to reset our falling velocity, otherwise we will fall faster the next time
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         if (isGrounded && velocity.y < 0)
@@ -45,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         //right is the red Axis, foward is the blue axis
         Vector3 move = transform.right * x + transform.forward * z;
  
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * currentSpeed * Time.deltaTime);
  
         //check if the player is on the ground so he can jump
         if (Input.GetButtonDown("Jump") && isGrounded)

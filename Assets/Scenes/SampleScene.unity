@@ -1372,8 +1372,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1648819248}
-  smoothSpeed: 0.1
-  speed: 12
+  smoothSpeed: 0.5
+  baseSpeed: 9
+  currentSpeed: 0
+  sprint: 5
+  crouchSpeed: 5
   gravity: -19.62
   jumpHeight: 3
   groundCheck: {fileID: 1612492557}

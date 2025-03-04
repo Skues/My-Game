@@ -48,4 +48,7 @@ public class CrouchController : MonoBehaviour
 
         isCrouching = !isCrouching;
     }
+    public bool IsCrouching(){
+        return isCrouching;
+    }
 }
