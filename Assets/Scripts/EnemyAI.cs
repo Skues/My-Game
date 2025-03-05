@@ -14,10 +14,12 @@ public class EnemyAI : MonoBehaviour
     public GameObject player;
     public LayerMask obstacleMask;
     public LayerMask targetMask;
+    public GameObject enemy;
     float threshold;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
         agent = GetComponent<NavMeshAgent>();
         agent.autoBraking = false;
         GotoNextPoint();
@@ -52,25 +54,36 @@ public class EnemyAI : MonoBehaviour
                         // {
                         //     Debug.Log("Player is in FOV but blocked by " + hit.collider.gameObject.name);
                         // }
+                        //Debug.Log("Checking if chase should stop: isChasing=" + isChasing + ", distance=" + Vector3.Distance(transform.position, player.transform.position));
+
                     }
-                    else if (isChasing && Vector3.Distance(transform.position, player.transform.position) > viewRadius)
-                    {
-                        StopChase();
-                    }
+        
                 }
             }
+        }
+        else if (isChasing)
+        {
+            //Debug.Log("Stopping Chase11");
+            //enemy.GetComponent<Renderer>().material.color = Color.green;
+
+            StopChase();
         }
         
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
             GotoNextPoint();
+            
     }
 
     void ChasePlayer(){
         isChasing = true;
+        enemy.GetComponent<Renderer>().material.color = Color.red;
         agent.SetDestination(player.transform.position);
+
     }
     void StopChase(){
+        Debug.Log("Stopping Chase");
         isChasing = false;
+        enemy.GetComponent<Renderer>().material.color = Color.green;
         GotoNextPoint();
     }
     void GotoNextPoint() {
