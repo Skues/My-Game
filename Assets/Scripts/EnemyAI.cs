@@ -16,6 +16,7 @@ public class EnemyAI : MonoBehaviour
     public LayerMask targetMask;
     public GameObject enemy;
     float threshold;
+    public float hearingDistance = 15f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -97,5 +98,16 @@ public class EnemyAI : MonoBehaviour
             // Choose the next point in the array as the destination,
             // cycling to the start if necessary.
         destPoint = (destPoint + 1) % points.Length;
+    }
+    public void DetectSound(Vector3 soundPosition, float loudness)
+    {
+        float distance = Vector3.Distance(transform.position, soundPosition);
+        if (distance <= (hearingDistance*loudness))
+        {
+            Investigate(soundPosition);
+        }
+    }
+    void Investigate(Vector3 soundPosition){
+        Debug.Log("Sound detected");
     }
 }

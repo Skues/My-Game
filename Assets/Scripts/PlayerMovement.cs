@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public SoundDetection soundEmitter;
     bool isCrouching;
     Vector3 targetPosition;
     Camera mainCamera;
@@ -39,7 +40,9 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isCrouching = crouchController.IsCrouching();
         if (Input.GetKey(KeyCode.LeftShift) && !isCrouching){
+            
             currentSpeed = baseSpeed + sprint;
+            soundEmitter.CreateSound(transform.position, 1f);
         }
         else if(isCrouching){
             currentSpeed = crouchSpeed;
