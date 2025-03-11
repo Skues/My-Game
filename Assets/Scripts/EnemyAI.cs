@@ -108,6 +108,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
     void Investigate(Vector3 soundPosition){
+        agent.SetDestination(soundPosition);
         Debug.Log("Sound detected");
     }
 }

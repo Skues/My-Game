@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !isCrouching){
             
             currentSpeed = baseSpeed + sprint;
-            soundEmitter.CreateSound(transform.position, 1f);
+            soundEmitter.CreateSound(transform.position, 2f);
         }
         else if(isCrouching){
             currentSpeed = crouchSpeed;
@@ -65,7 +65,9 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
  
         controller.Move(move * currentSpeed * Time.deltaTime);
- 
+        if(!isCrouching){
+            soundEmitter.CreateSound(transform.position, 1f);
+        }
         //check if the player is on the ground so he can jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {

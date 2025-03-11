@@ -7,7 +7,7 @@ public class SoundDetection : MonoBehaviour
 
     public void CreateSound(Vector3 position, float loudness)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(position, soundRadius);
+        Collider[] hitColliders = Physics.OverlapSphere(position, soundRadius*loudness);
         foreach (var hitCollider in hitColliders)
             {
                 if (hitCollider.CompareTag("Enemy"))
