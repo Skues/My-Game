@@ -16,7 +16,16 @@ public class EnemyAI : MonoBehaviour
     public LayerMask targetMask;
     public GameObject enemy;
     float threshold;
-    public float hearingDistance = 15f;
+    public float hearingDistance = 5f;
+
+    public enum AIState { Idle, Suspicious, Alerted, Engaged }
+    private float detectionLevel = 0f;
+    private float maxDetection = 100f;
+    private float detectionIncreaseRate = 20f;
+    private float detectionDecreaseRate = 10f;
+    private float detectionDelay = 2f;
+    private AIState currentState = AIState.Idle;
+    private float lastSeenTime = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -43,7 +52,9 @@ public class EnemyAI : MonoBehaviour
                     RaycastHit hit;
                     if (!Physics.Raycast(transform.position, direction, out hit, distToTarget, obstacleMask))
                     {
-                        ChasePlayer();
+                        detectionLevel += detectionIncreaseRate * Time.deltaTime;
+                        lastSeenTime = Time.time;
+                        // ChasePlayer();
 
                         print("PLAYER IN VIEW");
                         // if (hit.collider.gameObject == player)
@@ -72,10 +83,36 @@ public class EnemyAI : MonoBehaviour
         
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
             GotoNextPoint();
-            
+    detectionLevel = Mathf.Clamp(detectionLevel, 0, maxDetection);
+    UpdateAIState();
+    print(currentState);
+    switch (currentState)
+    {
+        case AIState.Idle:
+            this.GetComponent<NavMeshAgent>().speed = 3;
+            if (!isChasing && !agent.pathPending && agent.remainingDistance < 0.5f)
+                GotoNextPoint();
+            break;
+
+        case AIState.Suspicious:
+            this.GetComponent<NavMeshAgent>().speed = 3f;
+            agent.SetDestination(transform.position); // Pause and look around
+            break;
+
+        case AIState.Alerted:
+            this.GetComponent<NavMeshAgent>().speed = 3.5f;
+            agent.SetDestination(player.transform.position); // Move towards last seen position
+            break;
+
+        case AIState.Engaged:
+            this.GetComponent<NavMeshAgent>().speed = 4f;
+            ChasePlayer();
+            break;
+    }
     }
 
     void ChasePlayer(){
+        Debug.Log("CHASING");
         isChasing = true;
         enemy.GetComponent<Renderer>().material.color = Color.red;
         agent.SetDestination(player.transform.position);
@@ -104,11 +141,56 @@ public class EnemyAI : MonoBehaviour
         float distance = Vector3.Distance(transform.position, soundPosition);
         if (distance <= (hearingDistance*loudness))
         {
+
             Investigate(soundPosition);
         }
     }
     void Investigate(Vector3 soundPosition){
+        this.GetComponent<NavMeshAgent>().speed = 1.5f;
         agent.SetDestination(soundPosition);
         Debug.Log("Sound detected");
     }
+    void UpdateDetection(bool canSeePlayer)
+    {
+        if (canSeePlayer)
+        {
+            detectionLevel += detectionIncreaseRate * Time.deltaTime;
+            lastSeenTime = Time.time;
+        }
+        else if (Time.time > lastSeenTime + detectionDelay)
+        {
+            detectionLevel -= detectionDecreaseRate * Time.deltaTime;
+        }
+
+        detectionLevel = Mathf.Clamp(detectionLevel, 0, maxDetection);
+        UpdateAIState();
+    }
+    void UpdateAIState() {
+        Debug.Log(detectionLevel);
+        if (detectionLevel <= 25f)
+            {currentState = AIState.Idle;}
+        else if (detectionLevel > 25f && detectionLevel <= 50f)
+            {currentState = AIState.Suspicious;}
+        else if (detectionLevel > 50f && detectionLevel < 90f)
+            {currentState = AIState.Alerted;}
+        else if (detectionLevel >= 90f)
+            {currentState = AIState.Engaged;}
+
+    }
+    public float getCurrentDetection(){
+        return detectionLevel;
+    }
+
+    bool CanSeePlayer()
+{
+    RaycastHit hit;
+    Vector3 direction = (player.transform.position - transform.position).normalized;
+
+    if (Physics.Raycast(transform.position, direction, out hit, viewRadius))
+    {
+        return hit.collider.CompareTag("Player"); // Ensure your player has the tag "Player"
+    }
+
+    return false;
+}
 }
