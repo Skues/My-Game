@@ -26,6 +26,8 @@ public class EnemyAI : MonoBehaviour
     private float detectionDelay = 2f;
     private AIState currentState = AIState.Idle;
     private float lastSeenTime = 0f;
+    private bool canSeePlayer;
+    private bool isAlerted = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -39,6 +41,8 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        canSeePlayer = false;
+
         Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
         if (targetInViewRadius.Length > 0)
         {
@@ -54,6 +58,7 @@ public class EnemyAI : MonoBehaviour
                     {
                         detectionLevel += detectionIncreaseRate * Time.deltaTime;
                         lastSeenTime = Time.time;
+                        canSeePlayer = true;
                         // ChasePlayer();
 
                         print("PLAYER IN VIEW");
@@ -73,25 +78,24 @@ public class EnemyAI : MonoBehaviour
                 }
             }
         }
-        else if (isChasing)
-        {
-            //Debug.Log("Stopping Chase11");
-            //enemy.GetComponent<Renderer>().material.color = Color.green;
-
-            StopChase();
-        }
+    if (!canSeePlayer && Time.time > lastSeenTime + detectionDelay)
+    {
+        detectionLevel -= detectionDecreaseRate * Time.deltaTime; // Gradually decrease suspicion
+    }
         
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
-            GotoNextPoint();
+        
     detectionLevel = Mathf.Clamp(detectionLevel, 0, maxDetection);
     UpdateAIState();
-    print(currentState);
+
+
     switch (currentState)
-    {
+        {
         case AIState.Idle:
             this.GetComponent<NavMeshAgent>().speed = 3;
             if (!isChasing && !agent.pathPending && agent.remainingDistance < 0.5f)
-                GotoNextPoint();
+                print("STOPPPED CHASING");
+                StopChase();
+                // GotoNextPoint();
             break;
 
         case AIState.Suspicious:
@@ -108,7 +112,7 @@ public class EnemyAI : MonoBehaviour
             this.GetComponent<NavMeshAgent>().speed = 4f;
             ChasePlayer();
             break;
-    }
+        }
     }
 
     void ChasePlayer(){
@@ -119,10 +123,15 @@ public class EnemyAI : MonoBehaviour
 
     }
     void StopChase(){
+        if (currentState != AIState.Idle) return; // Prevent unnecessary calls
+
         Debug.Log("Stopping Chase");
         isChasing = false;
         enemy.GetComponent<Renderer>().material.color = Color.green;
-        GotoNextPoint();
+
+        if (!agent.pathPending && agent.remainingDistance < 0.5f) {
+            GotoNextPoint();
+        }
     }
     void GotoNextPoint() {
         // Returns if no points have been set up
@@ -180,6 +189,10 @@ public class EnemyAI : MonoBehaviour
     public float getCurrentDetection(){
         return detectionLevel;
     }
+    public bool getAlerted(){
+        return isAlerted;
+    }
+
 
     bool CanSeePlayer()
 {
@@ -193,4 +206,9 @@ public class EnemyAI : MonoBehaviour
 
     return false;
 }
+    public void PerformTakedown()
+    {
+        isAlerted = false;
+        Destroy(gameObject, 2f);
+    }
 }
