@@ -15,5 +15,11 @@ public class KnifeAttack : MonoBehaviour
         {
             anim.SetTrigger("Swing"); // This activates the animation
         }
+        else if (Input.GetMouseButtonDown(1)) // Left-click for attack
+        {
+            anim.SetTrigger("Stab"); // This activates the animation
+        }
+        float rotation = transform.eulerAngles.x;
+        Mathf.Clamp(rotation, 352, 6);
     }
 }
