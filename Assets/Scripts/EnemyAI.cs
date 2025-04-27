@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class EnemyAI : MonoBehaviour
     public GameObject enemy;
     float threshold;
     public float hearingDistance = 5f;
+    private bool isPatrolling = true;
+
 
     public enum AIState { Idle, Suspicious, Alerted, Engaged }
     private float detectionLevel = 0f;
@@ -28,6 +31,8 @@ public class EnemyAI : MonoBehaviour
     private float lastSeenTime = 0f;
     private bool canSeePlayer;
     private bool isAlerted = false;
+    private bool isWaiting = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -41,6 +46,8 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isWaiting) return; // Don't do anything while waiting
+
         canSeePlayer = false;
 
         Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -116,23 +123,37 @@ public class EnemyAI : MonoBehaviour
     }
 
     void ChasePlayer(){
+        isPatrolling = false;
+
         Debug.Log("CHASING");
         isChasing = true;
         enemy.GetComponent<Renderer>().material.color = Color.red;
         agent.SetDestination(player.transform.position);
 
     }
-    void StopChase(){
-        if (currentState != AIState.Idle) return; // Prevent unnecessary calls
+    void StopChase()
+{
+    if (currentState != AIState.Idle) return;
 
-        Debug.Log("Stopping Chase");
-        isChasing = false;
-        enemy.GetComponent<Renderer>().material.color = Color.green;
+    Debug.Log("Stopping Chase");
+    isChasing = false;
+    enemy.GetComponent<Renderer>().material.color = Color.green;
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f) {
-            GotoNextPoint();
+    if (!agent.pathPending && agent.remainingDistance < 0.5f)
+    {
+        if (!isPatrolling)
+        {
+            // Just resume patrolling, don't jump to next point yet
+            isPatrolling = true;
+            GotoNextPoint();  // Set destination to the current point (no increment yet)
+        }
+        else
+        {
+            // Already patrolling normally, safe to move to next point
+            StartCoroutine(WaitAndMove());
         }
     }
+}
     void GotoNextPoint() {
         // Returns if no points have been set up
         if (points.Length == 0)
@@ -143,7 +164,6 @@ public class EnemyAI : MonoBehaviour
 
             // Choose the next point in the array as the destination,
             // cycling to the start if necessary.
-        destPoint = (destPoint + 1) % points.Length;
     }
     public void DetectSound(Vector3 soundPosition, float loudness)
     {
@@ -157,6 +177,8 @@ public class EnemyAI : MonoBehaviour
     void Investigate(Vector3 soundPosition){
         this.GetComponent<NavMeshAgent>().speed = 1.5f;
         agent.SetDestination(soundPosition);
+        isPatrolling = false;
+
         Debug.Log("Sound detected");
     }
     void UpdateDetection(bool canSeePlayer)
@@ -211,4 +233,19 @@ public class EnemyAI : MonoBehaviour
         isAlerted = false;
         Destroy(gameObject, 2f);
     }
+    IEnumerator WaitAndMove()
+    {
+    isWaiting = true;
+    agent.isStopped = true; // Pause movement
+
+    float waitTime = Random.Range(1f, 2f);
+    yield return new WaitForSeconds(waitTime);
+
+    agent.isStopped = false; // Resume movement
+    destPoint = (destPoint + 1) % points.Length;
+
+    GotoNextPoint();
+    isWaiting = false;
+    }
 }
+
