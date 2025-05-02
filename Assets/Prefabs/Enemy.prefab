@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8118574256265517910}
   - component: {fileID: 8412227442132760759}
   - component: {fileID: 5607576790027432806}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 6305775271977439429}
   - component: {fileID: 1302135244435456188}
   - component: {fileID: 6142888212216721490}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 6497307642422671319}
   - component: {fileID: 1852676289888367993}
   - component: {fileID: 912852321950478868}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,3 +572,4 @@ MonoBehaviour:
     m_Bits: 256
   enemy: {fileID: 7796266504806217673}
   hearingDistance: 15
+  gameManager: {fileID: 0}

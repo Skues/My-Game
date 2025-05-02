@@ -32,11 +32,12 @@ public class EnemyAI : MonoBehaviour
     private bool canSeePlayer;
     private bool isAlerted = false;
     private bool isWaiting = false;
+    public GameManager gameManager;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
         agent = GetComponent<NavMeshAgent>();
         agent.autoBraking = false;
         GotoNextPoint();
@@ -116,6 +117,7 @@ public class EnemyAI : MonoBehaviour
             break;
 
         case AIState.Engaged:
+            gameManager.PlayerCaught();
             this.GetComponent<NavMeshAgent>().speed = 4f;
             ChasePlayer();
             break;
