@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-
+using System.Collections;
 public class RockProjectile : MonoBehaviour
 {
+    bool hasHit = false;
     public float lifetime = 5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -11,34 +12,30 @@ public class RockProjectile : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
+            // Prevent multiple hits
+        if (hasHit) return;
+        hasHit = true;
+
         if (collision.gameObject.tag == "Structure"){
             Destroy(gameObject);
         }
         else if (collision.gameObject.tag == "Enemy"){
             EnemyAI enemy = collision.collider.GetComponent<EnemyAI>();
-            Rigidbody enemyRB = collision.collider.GetComponent<Rigidbody>();
-
+        
             if (enemy != null){
                 enemy.TakeDamage(50);
-                if (enemyRB != null){
-                    if (!enemyRB.CompareTag("KnockedBack")){
-                        Vector3 forceDir = Camera.main.transform.forward;
-                        forceDir.y = 0f;
-                        forceDir = forceDir.normalized;
-                        enemyRB.AddForce(forceDir*1f, ForceMode.Impulse);
-                        collision.collider.tag = "KnockedBack";
-                    }
+                Destroy(gameObject);
+
                 }
-                    
+            
             }
-            Destroy(gameObject);
-            print("damage enemy");
         }
-    }
+    
+    
 
     // Update is called once per frame
     void Update()
     {
         
-    }
+    }  
 }

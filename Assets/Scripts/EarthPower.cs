@@ -4,14 +4,19 @@ public class EarthPower : MonoBehaviour
 {
     public GameObject projectilePrefab;
     public Transform startPoint;
-    public float shootForce = 20f;
+    private float shootForce = 30f;
+    private float cooldown = 2f;
+    private float nextShot = 0f;
+    private int rockCost = 20;
+    public PowerEnergyUI powerEnergyUI;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)){
+        if (Input.GetKeyDown(KeyCode.E) && Time.time >= nextShot && powerEnergyUI.UsePower(rockCost)){
             ShootProjectile();
+            nextShot = Time.time + cooldown;
         }
     }
     void ShootProjectile(){
