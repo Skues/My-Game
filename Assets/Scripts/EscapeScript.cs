@@ -10,13 +10,14 @@ public class EscapeScript : MonoBehaviour
     public CanvasGroup canvasGroup;
     private float fadeDuration = 2f;
     private bool triggered = false;
-
+    public CameraShake cameraShake;
     private void OnTriggerEnter(Collider other)
     {
         if (!triggered && other.CompareTag("Player"))
         {
             Debug.Log("GOGOGOGOGOGOGO");
-            StartCoroutine(FadeIn());
+            StartCoroutine(cameraShake.Shake(3f, 0.4f));
+            // StartCoroutine(FadeIn());
             triggered = true;
             Debug.Log("Player entered the area!");
 

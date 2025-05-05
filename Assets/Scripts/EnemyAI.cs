@@ -19,6 +19,7 @@ public class EnemyAI : MonoBehaviour
     float threshold;
     public float hearingDistance = 5f;
     private bool isPatrolling = true;
+    private int health = 100;
 
 
     public enum AIState { Idle, Suspicious, Alerted, Engaged }
@@ -47,6 +48,7 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (isWaiting) return; // Don't do anything while waiting
 
         canSeePlayer = false;
@@ -69,7 +71,7 @@ public class EnemyAI : MonoBehaviour
                         canSeePlayer = true;
                         // ChasePlayer();
 
-                        print("PLAYER IN VIEW");
+                        // print("PLAYER IN VIEW");
                         // if (hit.collider.gameObject == player)
                         // {
                         //     Debug.Log("Player is visible!");
@@ -101,7 +103,7 @@ public class EnemyAI : MonoBehaviour
         case AIState.Idle:
             this.GetComponent<NavMeshAgent>().speed = 3;
             if (!isChasing && !agent.pathPending && agent.remainingDistance < 0.5f)
-                print("STOPPPED CHASING");
+                // print("STOPPPED CHASING");
                 StopChase();
                 // GotoNextPoint();
             break;
@@ -127,7 +129,7 @@ public class EnemyAI : MonoBehaviour
     void ChasePlayer(){
         isPatrolling = false;
 
-        Debug.Log("CHASING");
+        // Debug.Log("CHASING");
         isChasing = true;
         enemy.GetComponent<Renderer>().material.color = Color.red;
         agent.SetDestination(player.transform.position);
@@ -137,7 +139,7 @@ public class EnemyAI : MonoBehaviour
 {
     if (currentState != AIState.Idle) return;
 
-    Debug.Log("Stopping Chase");
+    // Debug.Log("Stopping Chase");
     isChasing = false;
     enemy.GetComponent<Renderer>().material.color = Color.green;
 
@@ -199,7 +201,7 @@ public class EnemyAI : MonoBehaviour
         UpdateAIState();
     }
     void UpdateAIState() {
-        Debug.Log(detectionLevel);
+        // Debug.Log(detectionLevel);
         if (detectionLevel <= 25f)
             {currentState = AIState.Idle;}
         else if (detectionLevel > 25f && detectionLevel <= 50f)
@@ -248,6 +250,16 @@ public class EnemyAI : MonoBehaviour
 
     GotoNextPoint();
     isWaiting = false;
+    }
+
+    public void TakeDamage(int amount){
+        health -= amount;
+        if (health <= 0){
+            Die();
+        }
+    }
+    void Die(){
+        Destroy(gameObject);
     }
 }
 
