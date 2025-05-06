@@ -557,13 +557,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0137ca169ca9448b97124a24b2a1f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasKey: 0
+  keyPrefab: {fileID: 7549924729923349589, guid: efdd912df839afb4f83f08161d6a596b, type: 3}
   points:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  player: {fileID: 0}
+  player: {fileID: 2469378105179522784, guid: 534bee9acee0ac64e92e98069061d2ae, type: 3}
   obstacleMask:
     serializedVersion: 2
     m_Bits: 128
@@ -572,4 +574,4 @@ MonoBehaviour:
     m_Bits: 256
   enemy: {fileID: 7796266504806217673}
   hearingDistance: 15
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 4144035775362568993, guid: b42fe3a8ea6d54546a4cdd84fe3b31f8, type: 3}

@@ -20,13 +20,21 @@ public class EarthPower : MonoBehaviour
         }
     }
     void ShootProjectile(){
+        Vector3 targetDirection;
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f)){
+            targetDirection = (hit.point - startPoint.position).normalized;
+        }
+        else{
+            targetDirection = ray.direction;
+        }
         Transform cam = Camera.main.transform;
         Transform spawnPoint = startPoint != null ? startPoint : transform;
         GameObject proj = Instantiate(projectilePrefab, spawnPoint.position + spawnPoint.forward, Quaternion.identity);
         Rigidbody rb = proj.GetComponent<Rigidbody>();
 
         if (rb != null){
-            rb.linearVelocity = cam.forward *shootForce;
+            rb.linearVelocity = targetDirection * shootForce;
         }
     }
 }

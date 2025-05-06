@@ -5,7 +5,8 @@ using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
-
+    public bool hasKey = false;
+    public GameObject keyPrefab;
     public Transform[] points;
     private int destPoint = 0;
     private NavMeshAgent agent;
@@ -20,7 +21,6 @@ public class EnemyAI : MonoBehaviour
     public float hearingDistance = 5f;
     private bool isPatrolling = true;
     private int health = 100;
-
 
     public enum AIState { Idle, Suspicious, Alerted, Engaged }
     private float detectionLevel = 0f;
@@ -41,7 +41,12 @@ public class EnemyAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.autoBraking = false;
-        GotoNextPoint();
+        if (points != null && points.Length > 0){
+                GotoNextPoint();
+        }
+        else{
+                isPatrolling = false; // No patrol path, so this is a stationary enemy
+        }
         threshold = Mathf.Cos(viewAngle * 0.5f * Mathf.Deg2Rad);
     }
 
@@ -50,7 +55,7 @@ public class EnemyAI : MonoBehaviour
     {
         
         if (isWaiting) return; // Don't do anything while waiting
-
+    
         canSeePlayer = false;
 
         Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -235,7 +240,7 @@ public class EnemyAI : MonoBehaviour
     public void PerformTakedown()
     {
         isAlerted = false;
-        Destroy(gameObject, 2f);
+        Die();
     }
     IEnumerator WaitAndMove()
     {
@@ -259,6 +264,9 @@ public class EnemyAI : MonoBehaviour
         }
     }
     void Die(){
+        if (hasKey){
+            Instantiate(keyPrefab, transform.position + Vector3.down *1.5f, Quaternion.identity);
+        }
         Destroy(gameObject);
     }
 }
