@@ -17,6 +17,7 @@ public class EnemyAI : MonoBehaviour
     public LayerMask obstacleMask;
     public LayerMask targetMask;
     public GameObject enemy;
+    public ExperienceBar experienceBar;
     float threshold;
     public float hearingDistance = 5f;
     private bool isPatrolling = true;
@@ -264,6 +265,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
     void Die(){
+        experienceBar.AddExperience(40);
         if (hasKey){
             Instantiate(keyPrefab, transform.position + Vector3.down *1.5f, Quaternion.identity);
         }

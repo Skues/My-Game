@@ -554,6 +554,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6456054484364276608}
     m_Modifications:
+    - target: {fileID: 2643294821881883524, guid: 88579708ea5c0774ba3672204f00bb62, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643294821881883524, guid: 88579708ea5c0774ba3672204f00bb62, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643294821881883524, guid: 88579708ea5c0774ba3672204f00bb62, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 4822130548835517581, guid: 88579708ea5c0774ba3672204f00bb62, type: 3}
       propertyPath: m_Name
       value: Wall2 (1)

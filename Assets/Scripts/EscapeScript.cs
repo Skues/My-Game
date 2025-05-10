@@ -17,7 +17,7 @@ public class EscapeScript : MonoBehaviour
         {
             Debug.Log("GOGOGOGOGOGOGO");
             StartCoroutine(cameraShake.Shake(3f, 0.4f));
-            // StartCoroutine(FadeIn());
+            StartCoroutine(FadeIn());
             triggered = true;
             Debug.Log("Player entered the area!");
 
