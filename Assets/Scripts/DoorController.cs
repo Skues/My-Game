@@ -8,6 +8,7 @@ public class DoorController : MonoBehaviour, IDoor
     private bool isOpen = false;
     private float rotationSpeed = 1f;
     public float openAngle = -90f;
+    public bool locked;
     
     public Quaternion openRotation;
     public Quaternion closedRotation;
@@ -23,9 +24,16 @@ public class DoorController : MonoBehaviour, IDoor
     // Update is called once per frame
     void Update()
     {
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime*rotationSpeed);
+        // transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime*rotationSpeed);
     }
     public void ToggleDoor(){
+        print(locked);
+        if (locked && !Keycard.hasKeycard){
+            Debug.Log("Door is locked, play locked sound");
+            return;
+        }
+
+
         isOpen = !isOpen;
         StopAllCoroutines();
         StartCoroutine(RotateDoor());
@@ -40,4 +48,10 @@ public class DoorController : MonoBehaviour, IDoor
         transform.rotation = targetRotation;
 
     }
+    public void UnlockDoor()
+    {
+        locked = false;
+        Debug.Log("The door has been unlocked!");
+    }
+
 }
