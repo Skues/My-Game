@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Structure
   - KnockedBack
+  - EarthZone
+  - LightZone
   layers:
   - Default
   - TransparentFX

@@ -11,8 +11,8 @@ public class EnemyAI : MonoBehaviour
     private int destPoint = 0;
     private NavMeshAgent agent;
     bool isChasing;
-    private float viewRadius = 15f;
-    private float viewAngle = 120f;
+    public float viewRadius = 15f;
+    public float viewAngle = 120f;
     public GameObject player;
     public LayerMask obstacleMask;
     public LayerMask targetMask;
@@ -26,8 +26,8 @@ public class EnemyAI : MonoBehaviour
     public enum AIState { Idle, Suspicious, Alerted, Engaged }
     private float detectionLevel = 0f;
     private float maxDetection = 100f;
-    private float detectionIncreaseRate = 20f;
-    private float detectionDecreaseRate = 10f;
+    public float detectionIncreaseRate = 20f;
+    public float detectionDecreaseRate = 10f;
     private float detectionDelay = 2f;
     private AIState currentState = AIState.Idle;
     private float lastSeenTime = 0f;
