@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8718863928914680879}
   - component: {fileID: 1203847340416638200}
   - component: {fileID: 8642312408179766188}
+  - component: {fileID: -6140561900791048570}
   m_Layer: 0
   m_Name: EarthProjectile
   m_TagString: Untagged
@@ -149,4 +150,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a8c65ed6ce95634c81075dd3c641fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundEmitter: {fileID: -6140561900791048570}
   lifetime: 5
+--- !u!114 &-6140561900791048570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752196778218758375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10793d324e354ff4ab2681aadffee8ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundRadius: 10

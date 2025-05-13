@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 using System.Collections;
 public class RockProjectile : MonoBehaviour
 {
+    public SoundDetection soundEmitter;
     bool hasHit = false;
     public float lifetime = 5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,7 +18,8 @@ public class RockProjectile : MonoBehaviour
         hasHit = true;
 
         if (collision.gameObject.tag == "Structure"){
-            Destroy(gameObject);
+            soundEmitter.CreateSound(transform.position, 10f);
+            Destroy(gameObject);    
         }
         else if (collision.gameObject.tag == "Enemy"){
             EnemyAI enemy = collision.collider.GetComponent<EnemyAI>();

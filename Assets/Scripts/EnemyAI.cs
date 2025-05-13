@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
     public LayerMask targetMask;
     public GameObject enemy;
     public ExperienceBar experienceBar;
+    public bool checkingSound = false;
     float threshold;
     public float hearingDistance = 5f;
     private bool isPatrolling = true;
@@ -107,7 +108,7 @@ public class EnemyAI : MonoBehaviour
     switch (currentState)
         {
         case AIState.Idle:
-            this.GetComponent<NavMeshAgent>().speed = 3;
+            this.GetComponent<NavMeshAgent>().speed = 5;
             if (!isChasing && !agent.pathPending && agent.remainingDistance < 0.5f)
                 // print("STOPPPED CHASING");
                 StopChase();
@@ -115,12 +116,12 @@ public class EnemyAI : MonoBehaviour
             break;
 
         case AIState.Suspicious:
-            this.GetComponent<NavMeshAgent>().speed = 3f;
+            this.GetComponent<NavMeshAgent>().speed = 6f;
             agent.SetDestination(transform.position); // Pause and look around
             break;
 
         case AIState.Alerted:
-            this.GetComponent<NavMeshAgent>().speed = 3.5f;
+            this.GetComponent<NavMeshAgent>().speed = 7f;
             agent.SetDestination(player.transform.position); // Move towards last seen position
             break;
 
@@ -181,15 +182,20 @@ public class EnemyAI : MonoBehaviour
         if (distance <= (hearingDistance*loudness))
         {
 
-            Investigate(soundPosition);
+            StartCoroutine(Investigate(soundPosition));
+            checkingSound = false;
         }
     }
-    void Investigate(Vector3 soundPosition){
+    IEnumerator Investigate(Vector3 soundPosition){
+        checkingSound = true;
+        agent.isStopped = true; // Stop movement
+        isPatrolling = false;
+        yield return new WaitForSeconds(2f);
+        agent.isStopped = false;
         this.GetComponent<NavMeshAgent>().speed = 1.5f;
         agent.SetDestination(soundPosition);
-        isPatrolling = false;
-
         Debug.Log("Sound detected");
+
     }
     void UpdateDetection(bool canSeePlayer)
     {

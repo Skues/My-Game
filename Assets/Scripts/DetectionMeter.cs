@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class DetectionMeter : MonoBehaviour
 {
-    public Transform enemy;
-    public UnityEngine.UI.Image meterBackground;
+    public GameObject enemy;
+    public GameObject meterBackground;
     public UnityEngine.UI.Image detectionBar;
     private EnemyAI enemyAI;
 
@@ -16,7 +16,15 @@ public class DetectionMeter : MonoBehaviour
     }
     void Update()
     {
+        
         float currentDetection = enemyAI.getCurrentDetection();
         detectionBar.fillAmount = currentDetection/100;
+
+        if (currentDetection > 0){
+            meterBackground.SetActive(true);
+        }
+        else{
+            meterBackground.SetActive(false);
+        }
     }
 }

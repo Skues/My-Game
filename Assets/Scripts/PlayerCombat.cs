@@ -33,6 +33,7 @@ public class PlayerCombat : MonoBehaviour
     void StealthTakedown(){
         if (enemy != null && !enemy.getAlerted() && IsBehindEnemy(enemy)){
             enemy.PerformTakedown();
+            LevelStats.Instance.EnemyKilled();
         }
     }
     

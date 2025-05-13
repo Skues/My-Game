@@ -9,6 +9,7 @@ using Unity.Mathematics;
 
 public class EscapeScript : MonoBehaviour
 {
+    public GameObject endMenuLevel;
     public Transform explosionTarget;
     public CanvasGroup canvasGroup;
     public ParticleSystem explosionEffect;
@@ -25,8 +26,9 @@ public class EscapeScript : MonoBehaviour
         {
             Debug.Log("GOGOGOGOGOGOGO");
             StartCoroutine(cameraShake.Shake(3f, 0.4f));
-            // StartCoroutine(FadeIn());
+            
             StartCoroutine(PlayExplosion());
+            StartCoroutine(FadeIn());
             triggered = true;
             Debug.Log("Player entered the area!");
 
@@ -48,7 +50,7 @@ public class EscapeScript : MonoBehaviour
         explosionEffect.Play();
         explosionSound.Play();
 
-        yield return new WaitForSeconds(explosionDuration);
+        yield return new WaitForSeconds(4);
         player.GetComponent<PlayerMovement>().enabled = true;
 
     }
@@ -65,6 +67,7 @@ public class EscapeScript : MonoBehaviour
             canvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
             yield return null;
         }
+        endMenuLevel.SetActive(true);
     }
     // Update is called once per frame
     }

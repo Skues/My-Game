@@ -4,6 +4,8 @@ using TMPro;
 
 public class ExperienceBar : MonoBehaviour
 {
+    public static ExperienceBar Instance;
+
     public AnimationCurve experienceCurve;
     int currentLevel, totalExperience, previousLevelsExperience, nextLevelsExperience;
     public TextMeshProUGUI levelText;
@@ -12,15 +14,16 @@ public class ExperienceBar : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Instance = this;
         UpdateLevel();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)){
-            AddExperience(5);
-        }
+    //     if (Input.GetMouseButtonDown(0)){
+    //         AddExperience(5);
+    //     }
     }
     public void AddExperience(int amount){
         totalExperience += amount;
