@@ -6,7 +6,13 @@ public class PlayerCombat : MonoBehaviour
     private float takedownRange = 6f;
     private EnemyAI enemy;
     public GameObject takedownUI;
-
+    void Awake()
+    {
+        if(takedownUI == null){
+            takedownUI = GameObject.Find("TakedownUI");
+        }
+    }
+    
     void Update()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, takedownRange);

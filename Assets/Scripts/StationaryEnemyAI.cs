@@ -27,9 +27,13 @@ public class StationaryEnemyAI : MonoBehaviour
     private float threshold;
     private bool canSeePlayer;
     public GameManager gameManager;
+    private Animator animator;
+
 
     void Start()
     {
+        animator = transform.Find("character").GetComponent<Animator>();
+        animator.SetBool("isWalking", false);
         agent = GetComponent<NavMeshAgent>();
         threshold = Mathf.Cos(viewAngle * 0.5f * Mathf.Deg2Rad);
     }
@@ -68,15 +72,20 @@ public class StationaryEnemyAI : MonoBehaviour
         switch (currentState)
         {
             case AIState.Idle:
+                animator.SetBool("isWalking", false);
+
                 agent.isStopped = true;
                 break;
 
             case AIState.Suspicious:
+                animator.SetBool("isWalking", false);
+
                 agent.isStopped = true;
                 break;
 
             case AIState.Alerted:
                 agent.isStopped = false;
+                animator.SetBool("isWalking", true);
                 agent.SetDestination(player.transform.position);
                 break;
 
@@ -104,6 +113,8 @@ public class StationaryEnemyAI : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, soundPos) <= hearingDistance * loudness)
         {
+            animator.SetBool("isWalking", true);
+
             agent.SetDestination(soundPos);
         }
     }

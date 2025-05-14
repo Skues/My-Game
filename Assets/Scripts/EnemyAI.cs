@@ -36,11 +36,13 @@ public class EnemyAI : MonoBehaviour
     private bool isAlerted = false;
     private bool isWaiting = false;
     public GameManager gameManager;
-    
+    private Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        animator = transform.Find("character").GetComponent<Animator>();
+        animator.SetBool("isWalking", true);
         agent = GetComponent<NavMeshAgent>();
         agent.autoBraking = false;
         if (points != null && points.Length > 0){
@@ -118,9 +120,12 @@ public class EnemyAI : MonoBehaviour
         case AIState.Suspicious:
             this.GetComponent<NavMeshAgent>().speed = 6f;
             agent.SetDestination(transform.position); // Pause and look around
+            animator.SetBool("isWalking", false);
             break;
 
         case AIState.Alerted:
+            animator.SetBool("isWalking", true);
+
             this.GetComponent<NavMeshAgent>().speed = 7f;
             agent.SetDestination(player.transform.position); // Move towards last seen position
             break;
@@ -131,6 +136,15 @@ public class EnemyAI : MonoBehaviour
             ChasePlayer();
             break;
         }
+    // if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+    // {
+    //     animator.SetBool("isWalking", false);
+    // }
+    // else
+    // {
+    //     animator.SetBool("isWalking", true);
+    // }
+
     }
 
     void ChasePlayer(){
@@ -171,6 +185,8 @@ public class EnemyAI : MonoBehaviour
             return;
 
             // Set the agent to go to the currently selected destination.
+        animator.SetBool("isWalking", true);
+        
         agent.destination = points[destPoint].position;
 
             // Choose the next point in the array as the destination,
@@ -189,9 +205,12 @@ public class EnemyAI : MonoBehaviour
     IEnumerator Investigate(Vector3 soundPosition){
         checkingSound = true;
         agent.isStopped = true; // Stop movement
+        animator.SetBool("isWalking", false);
         isPatrolling = false;
         yield return new WaitForSeconds(2f);
         agent.isStopped = false;
+        animator.SetBool("isWalking", true);
+
         this.GetComponent<NavMeshAgent>().speed = 1.5f;
         agent.SetDestination(soundPosition);
         Debug.Log("Sound detected");
@@ -253,11 +272,15 @@ public class EnemyAI : MonoBehaviour
     {
     isWaiting = true;
     agent.isStopped = true; // Pause movement
+    animator.SetBool("isWalking", false);
+
 
     float waitTime = Random.Range(1f, 2f);
     yield return new WaitForSeconds(waitTime);
 
     agent.isStopped = false; // Resume movement
+    animator.SetBool("isWalking", true);
+
     destPoint = (destPoint + 1) % points.Length;
 
     GotoNextPoint();
@@ -271,6 +294,14 @@ public class EnemyAI : MonoBehaviour
         }
     }
     void Die(){
+        animator.SetBool("isDead", true);
+        agent.isStopped = true;
+        this.enabled = false;
+        StartCoroutine(DestroyAfterAnimation());
+        
+    }
+    IEnumerator DestroyAfterAnimation(){
+        yield return new WaitForSeconds(2.1f);
         experienceBar.AddExperience(40);
         if (hasKey){
             Instantiate(keyPrefab, transform.position + Vector3.down *1.5f, Quaternion.identity);

@@ -19,6 +19,11 @@ public class LightBlink : MonoBehaviour
         // characterController = GetComponent<CharacterController>();
 
         playerCamera = Camera.main;
+        GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+        if (foundPlayer){
+            player = foundPlayer;
+            characterController = player.GetComponent<CharacterController>();
+        }
         if (teleportMarkerPrefab != null){
             teleportMarker = Instantiate(teleportMarkerPrefab);
             teleportMarker.SetActive(false);
@@ -37,6 +42,11 @@ public class LightBlink : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse1)){
                 Teleport();
             }
+            
+        }
+        else if (Input.GetKeyDown(KeyCode.Q)){
+            teleportMarker.SetActive(false);
+            abilityActive = false;
         }
 
     }
@@ -59,9 +69,21 @@ public class LightBlink : MonoBehaviour
         characterController.enabled = false;
         player.transform.position = targetPosition + Vector3.up * 1f; // Lift to avoid clipping
         characterController.enabled = true;
+        
+        BlinkExecute();
 
         abilityActive = false;
         teleportMarker.SetActive(false);
     }
-
+    void BlinkExecute(){
+        Collider[] hits = Physics.OverlapSphere(player.transform.position, 2f);
+        foreach (Collider hit in hits){
+            if (hit.CompareTag("Boss")){
+                BossHealth bossHealth = hit.GetComponent<BossHealth>();
+                if (bossHealth){
+                    bossHealth.BlinkKill();
+                }
+            } 
+        }
+    }
 }

@@ -68,6 +68,8 @@ public class EscapeScript : MonoBehaviour
             yield return null;
         }
         endMenuLevel.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     // Update is called once per frame
     }

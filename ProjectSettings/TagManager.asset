@@ -9,6 +9,8 @@ TagManager:
   - KnockedBack
   - EarthZone
   - LightZone
+  - Boss
+  - PlayerSpawn
   layers:
   - Default
   - TransparentFX
