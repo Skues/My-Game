@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BossAI : MonoBehaviour
@@ -5,6 +6,7 @@ public class BossAI : MonoBehaviour
     public Transform player;
     public GameObject projectilePrefab;
     public Transform firePoint;
+    public GameObject endLevelScreen;
 
     public float burstInterval = 5f;
     public int shots = 3;
@@ -12,6 +14,8 @@ public class BossAI : MonoBehaviour
     public float projectileSpeed = 15f;
     public float vulnerableInterval = 15f;
     public float vulnerableDuration = 5f;
+    public bool isDead = false;
+    public bool isAttacking = false;
     
     [Header("Debug")]
     public bool isVulnerable = false;
@@ -21,9 +25,13 @@ public class BossAI : MonoBehaviour
     private float vulnerableTimer;
     private int shotsRemaining;
     private float shotWait;
+    private Animator animator;
+
 
     void Start()
     {
+        animator = transform.Find("Skeletonzombie").GetComponent<Animator>();
+        
         burstTimer = burstInterval;
         vulnerableTimer = vulnerableInterval;
         isVulnerable = false;
@@ -58,6 +66,12 @@ public class BossAI : MonoBehaviour
 
     void Update()
     {
+        if(isDead){
+            animator.SetBool("isDead", true);
+
+            animator.SetBool("isAttacking", false);
+            return;
+        }
         // Early return if essential components are missing
         if (player == null || projectilePrefab == null)
         {
@@ -67,6 +81,7 @@ public class BossAI : MonoBehaviour
         FacePlayer();
         HandleShooting();
         HandleVulnerability();
+        animator.SetBool("isAttacking", isAttacking);
     }
     
     void FacePlayer()
@@ -90,6 +105,7 @@ public class BossAI : MonoBehaviour
             if (burstTimer <= 0f)
             {
                 isShooting = true;
+                isAttacking = true;
                 shotsRemaining = shots;
                 shotWait = 0f;
                 burstTimer = burstInterval;
@@ -109,6 +125,7 @@ public class BossAI : MonoBehaviour
             if (shotsRemaining <= 0)
             {
                 isShooting = false;
+                isAttacking = false;
                 Debug.Log("Boss finished attack burst");
             }
         }
@@ -164,5 +181,17 @@ public class BossAI : MonoBehaviour
     {
         return isVulnerable;
     }
+    public void Die(){
+        isDead = true;
+        animator.SetBool("isDead", true);
+        StartCoroutine(DestroyAfterAnimation());
+    }
 
+    IEnumerator DestroyAfterAnimation(){
+        yield return new WaitForSeconds(4.3f);
+        Destroy(gameObject);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        endLevelScreen.SetActive(true);
+    }
 }

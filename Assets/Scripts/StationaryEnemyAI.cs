@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class StationaryEnemyAI : MonoBehaviour
 {
@@ -40,6 +41,19 @@ public class StationaryEnemyAI : MonoBehaviour
 
     void Update()
     {
+        // Check if player reference is missing
+    if (player == null)
+    {
+        GameObject foundPlayer = GameObject.FindWithTag("Player");
+        if (foundPlayer != null)
+        {
+            player = foundPlayer;
+        }
+        else
+        {
+            return; // Exit early if still no player
+        }
+    }
         canSeePlayer = false;
 
         Collider[] targetsInView = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -113,6 +127,7 @@ public class StationaryEnemyAI : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, soundPos) <= hearingDistance * loudness)
         {
+            agent.isStopped = false;
             animator.SetBool("isWalking", true);
 
             agent.SetDestination(soundPos);
@@ -128,13 +143,23 @@ public class StationaryEnemyAI : MonoBehaviour
 
     void Die()
     {
-        experienceBar.AddExperience(40);
-        if (hasKey)
-        {
-            Instantiate(keyPrefab, transform.position + Vector3.down * 1.5f, Quaternion.identity);
-        }
-        Destroy(gameObject);
+        animator.SetBool("isDead", true);
+        animator.SetBool("isDead", true);
+        agent.isStopped = true;
+        this.enabled = false;
+        StartCoroutine(DestroyAfterAnimation());
+
     }
+    IEnumerator DestroyAfterAnimation(){
+        yield return new WaitForSeconds(2.1f);
+        Destroy(gameObject);
+
+        experienceBar.AddExperience(40);
+        if (hasKey){
+            Instantiate(keyPrefab, transform.position + Vector3.down *1.5f, Quaternion.identity);
+        }
+    }
+
 
     public void PerformTakedown()
     {

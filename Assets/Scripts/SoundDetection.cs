@@ -14,6 +14,9 @@ public class SoundDetection : MonoBehaviour
                 {
                     hitCollider.GetComponent<EnemyAI>().DetectSound(position, loudness);
                 }
+                else if(hitCollider.CompareTag("StatEnemy")){
+                    hitCollider.GetComponent<StationaryEnemyAI>().DetectSound(position, loudness);
+                }
             }
 
 

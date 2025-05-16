@@ -296,9 +296,11 @@ public class EnemyAI : MonoBehaviour
     void Die(){
         animator.SetBool("isDead", true);
         agent.isStopped = true;
+        agent.updateRotation = false;
+        agent.updatePosition = false;
+
         this.enabled = false;
         StartCoroutine(DestroyAfterAnimation());
-        
     }
     IEnumerator DestroyAfterAnimation(){
         yield return new WaitForSeconds(2.1f);

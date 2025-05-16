@@ -14,12 +14,12 @@ public class BossHealth : MonoBehaviour
     public void TakeHit(){
         currentHits ++;
         if (currentHits >= maxHits){
-            Die();
+            bossAI.Die();
         }
     }
     public void BlinkKill(){
         if(bossAI.GetVulnerable()){
-            Die();
+            bossAI.Die();
         }
 
     }

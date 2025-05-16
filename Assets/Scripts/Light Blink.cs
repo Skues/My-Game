@@ -12,10 +12,13 @@ public class LightBlink : MonoBehaviour
     private Vector3 targetPosition;
     public GameObject player;
     public CharacterController characterController;
+    public int energyCost = 10;
+    public PowerEnergyUI powerEnergyUI;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
     {
+        powerEnergyUI = GameObject.Find("EnergyBarFill").GetComponent<PowerEnergyUI>();
         // characterController = GetComponent<CharacterController>();
 
         playerCamera = Camera.main;
@@ -23,6 +26,7 @@ public class LightBlink : MonoBehaviour
         if (foundPlayer){
             player = foundPlayer;
             characterController = player.GetComponent<CharacterController>();
+            // powerEnergyUI = player.GetComponent<PowerEnergyUI>();
         }
         if (teleportMarkerPrefab != null){
             teleportMarker = Instantiate(teleportMarkerPrefab);
@@ -66,17 +70,25 @@ public class LightBlink : MonoBehaviour
     }
     void Teleport()
     {
-        characterController.enabled = false;
-        player.transform.position = targetPosition + Vector3.up * 1f; // Lift to avoid clipping
-        characterController.enabled = true;
-        
-        BlinkExecute();
+        if(powerEnergyUI.UsePower(energyCost)){
 
-        abilityActive = false;
-        teleportMarker.SetActive(false);
+        
+            characterController.enabled = false;
+            player.transform.position = targetPosition + Vector3.up * 1f; // Lift to avoid clipping
+            characterController.enabled = true;
+            
+            BlinkExecute();
+
+            abilityActive = false;
+            teleportMarker.SetActive(false);
+        }
+        else {
+            abilityActive = false;
+            teleportMarker.SetActive(false);
+        }
     }
     void BlinkExecute(){
-        Collider[] hits = Physics.OverlapSphere(player.transform.position, 2f);
+        Collider[] hits = Physics.OverlapSphere(player.transform.position, 4f);
         foreach (Collider hit in hits){
             if (hit.CompareTag("Boss")){
                 BossHealth bossHealth = hit.GetComponent<BossHealth>();

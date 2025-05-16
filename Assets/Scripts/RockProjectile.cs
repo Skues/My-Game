@@ -31,6 +31,16 @@ public class RockProjectile : MonoBehaviour
                 }
             
             }
+        else if (collision.gameObject.tag == "StatEnemy"){
+            StationaryEnemyAI enemy = collision.collider.GetComponent<StationaryEnemyAI>();
+        
+            if (enemy != null){
+                enemy.TakeDamage(50);
+                Destroy(gameObject);
+
+                }
+            
+            }
         else if(collision.gameObject.tag == "Boss"){
             BossHealth bossHealth = collision.gameObject.GetComponent<BossHealth>();
             if(bossHealth){

@@ -1,5 +1,4 @@
 using UnityEngine;
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine.UI;
 
 public class StationaryDetectionMeter : MonoBehaviour

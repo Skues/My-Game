@@ -1,6 +1,5 @@
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -51,8 +50,6 @@ public class EndLevelMenu : MonoBehaviour
         return $"{minutes}:{seconds:00}";
     }
     public void LoadNextLevel(){
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene("Level2");
     }
     public void ExitGame(){

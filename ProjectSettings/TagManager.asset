@@ -11,6 +11,7 @@ TagManager:
   - LightZone
   - Boss
   - PlayerSpawn
+  - StatEnemy
   layers:
   - Default
   - TransparentFX
